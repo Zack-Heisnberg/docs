@@ -1,0 +1,28 @@
+---
+title: 'GET /v2/validate'
+description: 'Validate access token'
+---
+
+Confirm that your `authorization` token is valid before using other endpoints.
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/validate
+```
+
+```json
+{
+  "username": "demo",
+  "apiKey": {
+    "key": "...",
+    "isEnabled": true,
+    "type": "PRODUCTION",
+    "allowedips": [],
+    "scope": "READ-WRITE"
+  }
+}
+```
+
+- `400` – token missing
+- `401` – token invalid
+- `403` – too many invalid attempts, IP blocked

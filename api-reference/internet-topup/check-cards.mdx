@@ -1,0 +1,26 @@
+---
+title: 'GET /v2/internet/checkCards/{type}'
+description: 'Check internet card availability'
+---
+
+Retrieve available ADSL or 4G cards with cost and availability.
+
+**Path parameter**
+- `type`: `ADSL` or `4G`
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/internet/checkCards/ADSL
+```
+
+```json
+[
+  {
+    "cost": 470,
+    "value": 500,
+    "available": true
+  }
+]
+```
+
+Remove the `cost` field before exposing card data to end users.
