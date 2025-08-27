@@ -1,195 +1,1760 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+    "openapi": "3.0.0",
+    "info": {
+        "title": "OneClickDz Flexy API - Simplifying Mobile Top-ups in Algeria",
+        "description": "The OneClickDz Flexy API is a user-friendly and efficient RESTful API designed to streamline mobile top-up services in Algeria. With our API, you can easily integrate mobile recharge functionality into your applications or services, providing a seamless experience for users to recharge their mobile phones. Say goodbye to complex processes and hello to simplified mobile top-ups with the Oneclickdz Flexy API.\n\n## Enroll/SignUp:\n\nSignup at https://oneclickdz.com/\n\nand Enable API Access and generate your API Key from the settings page https://oneclickdz.com/#/settings\n\n",
+        "version": "2.3.0",
+        "contact": {
+            "email": "support@oneclickdz.com",
+            "name": "OneClickDz",
+            "url": "https://oneclickdz.com"
         }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
+    },
+    "paths": {
+        "/v2/ping": {
+            "get": {
+                "summary": "Ping endpoint",
+                "description": "Checks the status of the API service and available operators.\n      The API health status indicates the availability of the service, ( database connection ..) When the status is \"ok,\" it means the service is operational and you can use it. On the other hand, if the status is \"error,\" it indicates it is temporary unavailabile\nStatus of the operators. \"up\" indicates that it is available, while \"down\" indicates it is unavailable.\n",
+                "tags": [
+                    "info"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "api": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ok",
+                                                "error"
+                                            ],
+                                            "description": "The API health status indicates the availability of the service,  ( database connection ..) When the status is \"ok,\" it means the service is operational and you can use it. On the other hand, if the status is \"error,\" it indicates it is temporary unavailabile"
+                                        },
+                                        "operators": {
+                                            "type": "object",
+                                            "properties": {
+                                                "mobilis": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "up",
+                                                        "down"
+                                                    ],
+                                                    "description": "Status of the Mobilis operator. \"up\" indicates that it is available, while \"down\" indicates it is unavailable."
+                                                },
+                                                "ooredoo": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "up",
+                                                        "down"
+                                                    ],
+                                                    "description": "Status of the Ooredoo operator. \"up\" indicates that it is available, while \"down\" indicates it is unavailable."
+                                                },
+                                                "djezzy": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "up",
+                                                        "down"
+                                                    ],
+                                                    "description": "Status of the Djezzy operator. \"up\" indicates that it is available, while \"down\" indicates it is unavailable."
+                                                },
+                                                "mobilisFixedPlans": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "up",
+                                                        "down"
+                                                    ],
+                                                    "description": "Status of the Mobilis Fixed Plans operator (Sama | Pixx). \"up\" indicates that it is available, while \"down\" indicates it is unavailable."
+                                                }
+                                            },
+                                            "description": "Status of different operators."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "required": true
         },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
+        "/v2/validate": {
+            "get": {
+                "summary": "Validate Access Token",
+                "description": "\nUpon receiving an access token, the first step is to validate it by including its value in the headers of your requests, using the name 'access_token'.\nyou\n\nA successful response will contain the following information:\n\n      - `username`: A string representing the username associated with the API key.\n      - `apiKey`: An object containing information about the user's API key.\n        - `key`: A string representing the value of the API key.\n        - `isEnabled`: A boolean indicating whether the API key is enabled or not.\n        - `type`: A string specifying the type of the API key, which can be either \"PRODUCTION\" or \"SANDBOX\".\n        - `allowedips`: An array of strings representing the allowed IP addresses for the API key.\n        - `scope`: A string specifying the scope of the API key, which can be either \"READ-ONLY\" or \"READ-WRITE\".\n\nOur system's architecture is a multi-threaded queue based processing , so when you send a mobile topup request to our API,  we will queue your request to be processed as soon as possible ( generally 5 to 30 seconds )\n\n\nPlease note that the following error responses can occur in requests to this endpoint as well as other endpoints that require authentication:\n\n      - `400`: Access token missing (make sure you have set access_token in the header).\n      - `401`: Invalid access token (make sure you send the correct access token).\n      - `403`: Too many invalid access token attempts. IP blocked. Please contact us to unblock your IP address.\n\nFor all other unexpected or unhandled errors:\n\n      - `500`: Internal server error. Our developers will be notified automatically, so there is no need to contact us. If any changes are required from your endpoint, we may reach out to you. Please keep the request ID for investigation purposes.\n\n",
+                "tags": [
+                    "authentication"
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Default Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "apiKey": {
+                                            "type": "object",
+                                            "properties": {
+                                                "key": {
+                                                    "type": "string"
+                                                },
+                                                "isEnabled": {
+                                                    "type": "boolean"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "PRODUCTION",
+                                                        "SANDBOX"
+                                                    ]
+                                                },
+                                                "allowedips": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "scope": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "READ-WRITE",
+                                                        "READ-ONLY"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Access token missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Access token missing",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Access token missing"
+                                            ]
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid access token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Invalid access token",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Invalid access token"
+                                            ]
+                                        },
+                                        "attemptsLeft": {
+                                            "type": "number"
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Blocked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Blocked",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Too many invalid access token attempts. IP blocked."
+                                            ]
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+        },
+        "/v2/account/balance": {
+            "get": {
+                "summary": "Account Balance Endpoint",
+                "description": "\nThe account balance represents the current balance in the user's account. If the balance reaches a low threshold ( contact us to set it ), a notification will be sent to the user's email address.\n          \nYou can integrate this functionality into your admin panel to easily keep track of the balance.\n          ",
+                "tags": [
+                    "account"
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "balance": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
+        },
+        "/v2/account/transactions": {
+            "get": {
+                "summary": "listTransactions",
+                "description": "# Transactions\nAll changes to the user balance will be logged as transactions.\n\n### NOTE: You can access the transactions list from your main account at ONECLICKDZ.com\n\noperation can be decrement or increment\n\ntypes of transactions:\n\n- Increment:\n    - DEPOSIT: When the user makes a deposit to OneClickDz.\n    - REFUND-FLEXY: When a mobile top-up fails and gets refunded.\n  Other :  \"RECEIVE\", \"POINT-EXCHANGE\", \"REFUND-ORDER\",\"REFUND-SERVICE\",\"REFUND-ADSL\".. \n\n- Decrement:\n    - FLEXY: When the user makes a mobile top-up request despite the status.\n    - WITHDRAW: When the user decides to withdraw their money back.\n  Other : \"SEND\", \"ADSL\", \"ORDER\", \"SERVICE\"..\n\nTo facilitate searching for transactions, this API supports pagination and allows you to filter by date (optional). \n\n- Page: The page number for pagination (default: 1, minimum: 1).\n- PageSize: The number of transactions per page (default: 20, maximum: 100, minimum: 1).\n- From: The start date and time for filtering transactions (ISO 8601 date-time format).\n- To: The end date and time for filtering transactions (ISO 8601 date-time format).\n\nThe response will include the old balance, amount, new balance.\nthe objid (the ID of the order) can be undefined.\n\n## Imporant\n\nPlease note that page numbering starts from 1, not 0.\nMax PageSize is 100.\nWhen filtering by date, the 'from' and 'to' parameters in the query should be both presented and in ISO 8601 date-time format.\n\n## errorMessages\n    \"querystring.page must be an integer\"\n    \"querystring.page should be >= 1\"\n    \"querystring.pageSize must be an integer\"\n    \"querystring.pageSize should be >= 1\"\n    \"querystring.pageSize should be <= 100\"\n    \"querystring.from should match the format 'date-time'\"\n    \"querystring.to should match the format 'date-time'\"\n        ",
+                "tags": [
+                    "account"
+                ],
+                "parameters": [
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "pageSize",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 20
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "transactions": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/def-1"
+                                            }
+                                        },
+                                        "totalResults": {
+                                            "type": "integer"
+                                        },
+                                        "currentPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error Validating Query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Error Validating Query",
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "querystring.page must be an integer",
+                                                "querystring.page should be >= 1",
+                                                "querystring.pageSize must be an integer",
+                                                "querystring.pageSize should be >= 1",
+                                                "querystring.pageSize should be <= 100",
+                                                "querystring.from should match the format 'date-time'",
+                                                "querystring.to should match the format 'date-time'"
+                                            ]
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/plans/listAll": {
+            "get": {
+                "summary": "listPlans",
+                "description": "# Plans\nPlans represents mobile topup plans that are availaible on each operator\n\n## Plan Model\n\nThere are 2 types of plans: dynamicPlans and fixedPlans.\n\n**dynamicPlans** allow you to send the MSSIDN (phone number) and the amount. Please note that there is a min_amount and max_amount on each plan that should be respected. Examples include Prepaid (a normal mobile top-up), Facture, and International.\n\n**fixedPlans** are directly activated plans where the amount is fixed. You need to send the plan code and MSSIDN. Examples \"Pixx 500\" , \"Special 2000\" ..\n\nThe plans model has the following properties:\n\n- **Code**: The code for the plan that you will have to send when making a new mobile top-up request.\n- **Amount**: The amount that will be sent to the MSSIDN.\n- **Name**: A user-friendly name for the plan to show your end users.\n- **Cost**: The cost of 1 dzd for both dynamic and fixed plans.\n\n### Cost\nIf the cost is 0.98, it means a mobile top-up of 1000dzd will debit 980dzd. For a fixedPlan (\"Pixx 500\"), it will debit 500 * 0.98 = 490dzd.\nPlease note that the cost represents the price you will pay for a one-click and not what your end users will pay. So make sure to remove the cost property before sending the plans data to your end users (clients). To ensure you will always make a profit, we recommend using a profit margin instead of a fixed cost for your clients.\n\nProfit margin approach: \n- 50 means if it's cost 490dzd, you sell it to your user for 495dzd and profit 5dzd.\n- 100 means you take all the profit and sell it to your users for 500dzd.\n- yourCost = ((1 - cost) * profitMarginPercentage/100);\n\n### Integrate GetMenu:\na new 3 plans \"GETMENU_Mobilis\", \"GETMENU_Ooredoo\", \"GETMENU_Djezzy\" are used to show all available offers for that specific number ( with all amounts )\n\nsend a new topup request with v2/topup/sendTopup with the correct plan_code and MSSIDN\nthe followStatus and show the suggested_offers, \nwe recommend allowing the user to use AUTO Plans first ( as it's will be quicker ) if the user choose a wrong plan \n`suggested_offers` will be returned\n\n## Changes\n\nPlans are generally stable and rarely change. The codes used for plans will always be the same. It is safe to load the plans only once and save them in your database along with your additional propreties ( your price ),\nthen serve them to your clients instead of calling this endpoint each time.\n\nIf the plans or the cost change, you will be notified in advance.\n\nWe recommend setting a syncing function that you run when plans/cost change. A callback for this may be added in the future.\n\n\n## Front-end Filtering\n\nWe recommend loading all the plans from this API and saving them in your database in a similar table/collection. Add your own cost/price.\n\nWhen your user opens the mobile top-up screen, load all the plans on the frontend side of your clients. There is a limited number of plans. Perform plans filtering and validation for the amount.\n\nOptional: Save the plans in a Cache Instance (e.g., Redis) and only reset it on plans change.\n        \n",
+                "tags": [
+                    "plans"
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "dymanicPlans": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/def-2"
+                                            }
+                                        },
+                                        "fixedPlans": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/def-3"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/internet/checkCards/{type}": {
+            "get": {
+                "summary": "Check Cards",
+                "description": "\nThis API endpoint retrieves the available internet top-up cards for the specified service type.\n\n- **Usage**:\n - /checkCards/ADSL to check the availability of ADSL cards.\n - /checkCards/4G to check the availability of 4G LTE cards.\n\nThe response includes the cost, card name, and availability status.\n\n## Response => 200\na successfull respond will return an array of all cards with the availability\n\n            {\n                cost: 470, // cost \n                value: 500, // card value\n                available: true, // availability\n            },\n\n`**Note**: Please note that the cost represents the price you will pay for a one-click and not what your end users will pay.\nSo make sure to remove the cost property before sending the cards data to your end users (clients).`\n\n## Response => 400 Bad Request\nMake sure you are sending the request correctly ( respect uppercase on param ADSL 4G )\n\n\n        ",
+                "tags": [
+                    "internet-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ADSL",
+                                "4G"
+                            ]
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "cost": {
+                                                "type": "number"
+                                            },
+                                            "value": {
+                                                "type": "number"
+                                            },
+                                            "available": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "description": "Success"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation failed",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/internet/checkNumber/{type}/{number}": {
+            "get": {
+                "summary": "Check Number",
+                "description": "\nThis API endpoint validates phone numbers before processing internet top-up requests, reducing errors and refund issues. It ensures that the phone number follows the correct format based on the service type (ADSL or 4G).\n\n- **Phone Number Format**:\n  - 213 followed by 9 digits (e.g., 213472731602) for 4G\n  - 0 followed by 8 digits (e.g., 036362608, 031417237) for ADSL\n\nAlways use this endpoint to verify numbers before submitting top-up requests to prevent failed transactions and refund-related issues.\n\n## Response => 200\nOptional the data can be shown to the client before sending the topup\n\n        { \n          ncli: \"110201****\" // \"Client number, partially masked\",\n          offre: \"15M_ADSL_Prepaid_indiviual\" // \"Offer type / Line Speed\",\n          type: \"ADSL\" // \"Service type (ADSL or 4G)\",\n        }\n\n## Response => 400\n\nprocess this status depending on the value of error\n\n### ERR_VALIDATION { error: \"ERR_VALIDATION\" , message: \"**\" }\ncheck that you are sending all the params correctly\n\n### ERR_PHONE { error: \"ERR_PHONE\" , message: \"**\" }\nthe issue can be due to one of the following\n1 - mismatched type\n2 - wrong phone number\n3 - issue from algerie telecom servers\nthe message can be shown to the client as it is :\n\n            \"عذرًا، لم نتمكن من تأكيد هذا الرقم. يرجى التحقق من صحة الرقم ومن نوع العرض  . إذا كان الرقم صحيحًا، يرجى المحاولة مرة أخرى لاحقًا.\"\n\n ",
+                "tags": [
+                    "internet-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ADSL",
+                                "4G"
+                            ]
+                        }
+                    },
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "number",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^(213[0-9]{9}|0[0-9]{8})$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Successful validation",
+                                    "properties": {
+                                        "ncli": {
+                                            "type": "string",
+                                            "description": "Client number, partially masked"
+                                        },
+                                        "offre": {
+                                            "type": "string",
+                                            "description": "Offer type"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "description": "Service type (ADSL or 4G)"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation failed | Client Number Error ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation failed | Client Number Error ",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION",
+                                                "ERR_PHONE"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/internet/sendTopup": {
+            "post": {
+                "summary": "Send Internet Top-Up",
+                "description": "\nThis API endpoint is used to send/create a new internet top-up.\n\nSend a POST request with the following body:\n\n- The 'type' parameter represents the card type ADSL or 4G\n\n- The 'value' parameter represents the card value you obtained earlier from /internet/checkCards. such as 500 , 1000 , 1500 ..\n\n- The 'number' parameter represents the phone number you  validated earlier.\n\n- The 'ref' parameter is a UNIQUE string representing the order ID on your backend side, It is useful for avoiding duplicated requests and easily tracking the status when integrating with our top-up API.\n  While it is optional, we strongly recommend sending your own.\n\n\n\nPlease follow this approach for atomicity and efficiency:\n\n- Make sure to create a table/collection in your database to save user requests (include number, value, status, ref etc.).\n- In a database transaction, create the order, adjust the user's balance, and return the order ID to the user.\n- Send the response to the user indicating that the order is processing and they will be notified once it's done.\n- Asynchronously, send the API request and include the order ID from your database as 'ref' to easily look it up.\n\nIf the API request fails immediately due to one of the following errors or a network error,\nyou can safely either refund your user or try again with the same 'ref'.\n\nWe strongly advise against sending the API request without saving the order first.\n\n\n## Response => 200\na successfull respond will return the topupId and the topupRef \n( if not set by you , you should save it on your orders table )\n\nchecking the status / callback please refer to internet/getStatus documentations\n\n        {\n          \"topupId\": \"string\",\n          \"topupRef\": \"string\",\n        }\n\n##  Response => 403 { \"error\": \"Forbidden\" }\n\"message\" is one of the following and and it's meant for your you as developer\n\n       \"NO-BALANCE\" => you don't have enough balance to perform this request\n       \"DUPLICATED-REF\" => this ref is already used , you should check the current order status topup/getByRef/:ref\n\n##  Response => 400 Bad Request\n\n### Service  Valiadtion { \"error\": \"\"ERR_SERVICE\" }\nservice is currently disabled , tell your client to try again later\n\n### Request Valiadtion { \"error\": \"ERR_VALIDATION\" }\ncheck you are sending the data correctly\n\n### Request Valiadtion { \"error\": \"ERR_PHONE\" }\nrefer to /checkNumber endpoint\n\n### Request Valiadtion { \"error\": \"ERR_STOCK\" }\nthe chosen card value is not available , suggest to your client to use other values\n\n\n##  Response => 500 Internal Server Error\nAn internal server error occurred. ( don't refund till we investigate the request )\n\n      ",
+                "tags": [
+                    "internet-topup"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ADSL",
+                                            "4G"
+                                        ]
+                                    },
+                                    "number": {
+                                        "type": "string",
+                                        "pattern": "^(213[0-9]{9}|0[0-9]{8})$"
+                                    },
+                                    "value": {
+                                        "type": "number"
+                                    },
+                                    "ref": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "number",
+                                    "value"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Success",
+                                    "properties": {
+                                        "topupId": {
+                                            "type": "string"
+                                        },
+                                        "topupRef": {
+                                            "type": "string"
+                                        },
+                                        "newBalance": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation | Service | Phone | Stock ..",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation | Service | Phone | Stock ..",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION",
+                                                "ERR_SERVICE",
+                                                "ERR_PHONE",
+                                                "ERR_STOCK"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Forbidden",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Forbidden"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "NO-BALANCE",
+                                                "DUPLICATED-REF"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/internet/checkStatus/{by}/{search}": {
+            "get": {
+                "summary": "check-status",
+                "description": "Generally our servers will process your request in about 5-30 seconds\n\nit's mandatory to understand all the possible status to understand how to handle updating and notifying your users  \n\n        \n# Status\n\n### HANDLING\n\nThe `HANDLING` status indicates that the order is currently being processed by one of our servers. \nYou can expect to receive the result within 3 to 8 seconds. \n( on rare cases when the Algerie teleocm servers are overloaded might take up to 45 seconds )\n\n\n### FULFILLED\n\nThe `FULFILLED` status indicates that the internet top-up has been successfully sent.\n\n### REFUNDED\n\nThe `REFUNDED` status indicates that the internet top-up has been refunded.\n\n### QUEUED\n\nThe `QUEUED` status indicates that the internet top-up will be proccessed in 12 to 48 hours .\n\n\n\n## InternetModel\n\nthe following properties \n\n`num_trans` ( the topup transaction number , Returned from Algeria Telecom Servers)\n`date_traitement` ( the topup transaction date,  Returned from Algeria Telecom Servers )\n`card_code` ( the card code that got activated for the number)\n\nare initially equal to `'N/A'`\nand available when the status is FULFILLED\n\n\n        {\n            \"ref\": \"d9918e63-7890-407b-93a6-ceae58ae9d1c\",\n            \"status\": \"FULFILLED\",\n\n            \"num_trans\": \"V50055185867\",\n            \"date_traitement\": \"2024-09-07 11:13\",\n            \"card_code\": \"6964610896941904\"\n\n            \"type\": \"ADSL\",\n            \"topup_amount\": 2000,\n            \"number\": \"036442821\",\n            \"balance_amount\": 1960,\n            \"created_at\": \"2024-09-07T10:45:00.885Z\",\n            \"_id\": \"66dc2eac29a38098338d03c4\"\n          },\n\n\n# Syncing our API with your backend\n\n## on Each get request from your users\n\nset a checkStatus endpoint on your backend \n\nOne simple approach is setting an interval of 5 -10 seconds on your frontEnd to check the status \nonce the status is FULFILLED or Refunded or QUEUED you clear the interval and stop sending request\n\non each get request from your users , you can read the status in your database ,\nonly if the status is not `FULFILLED` or `Refunded` or `QUEUED`, you send a check request to our api and update your database then reply to your user\nthis approach will keep a minimal request (5-10 per transaction)\n\n        \n        ",
+                "tags": [
+                    "internet-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "by",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "REF",
+                                "ID"
+                            ]
+                        }
+                    },
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "topup": {
+                                            "$id": "InternetModel",
+                                            "type": "object",
+                                            "title": "internet",
+                                            "properties": {
+                                                "ref": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "HANDLING",
+                                                        "FULFILLED",
+                                                        "REFUNDED",
+                                                        "QUEUED"
+                                                    ]
+                                                },
+                                                "card_code": {
+                                                    "type": "string"
+                                                },
+                                                "num_trans": {
+                                                    "type": "string"
+                                                },
+                                                "date_traitement": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "topup_amount": {
+                                                    "type": "number"
+                                                },
+                                                "number": {
+                                                    "type": "string"
+                                                },
+                                                "balance_amount": {
+                                                    "type": "number"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "_id": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "not found ",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "NOT_FOUND"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/internet/list": {
+            "get": {
+                "summary": "listInternettopups",
+                "description": "# Topups\n\n\n# Please refer to \"check-status\" /checkStatus/:by/:search docs to understand the model\n\nthis API supports pagination and allows you to filter by date (optional). \n\n- Page: The page number for pagination (default: 1, minimum: 1).\n- PageSize: The number of transactions per page (default: 20, maximum: 100, minimum: 1).\n- From: The start date and time for filtering transactions (ISO 8601 date-time format).\n- To: The end date and time for filtering transactions (ISO 8601 date-time format).\n\nThe response will topup orders.\n\n## Imporant\n\nPlease note that page numbering starts from 1, not 0.\nMax PageSize is 100.\nWhen filtering by date, the 'from' and 'to' parameters in the query should be both presented and in ISO 8601 date-time format.\n\n## errorMessages\n    \"querystring.page must be an integer\"\n    \"querystring.page should be >= 1\"\n    \"querystring.pageSize must be an integer\"\n    \"querystring.pageSize should be >= 1\"\n    \"querystring.pageSize should be <= 100\"\n    \"querystring.from should match the format 'date-time'\"\n    \"querystring.to should match the format 'date-time'\"\n        ",
+                "tags": [
+                    "internet-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "pageSize",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 20
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "topups": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/def-4"
+                                            }
+                                        },
+                                        "totalResults": {
+                                            "type": "integer"
+                                        },
+                                        "currentPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error Validating Query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Error Validating Query",
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/topup/sendTopup": {
+            "post": {
+                "summary": "Send Mobile Top-Up",
+                "description": "\nThis API endpoint is used to send/create a new mobile top-up.\n\nSend a POST request with the following body:\n\n- The 'plan_code' parameter represents the plan code you obtained earlier from /plans/listAll.\n\n- The 'MSSIDN' parameter represents the phone number to which the top-up will be sent.\n  It must follow the following regex pattern: \"^0[567][0-9]{8}$\". and it's must be a string , Examples: 0665983439 /  0778037340 / 0556121212\n  The API will not make any changes to the phone number, so you should trim spaces, add leading zeros, etc.\n\n- If the plan is dynamic, the 'amount' parameter is required. For fixed plans, it is optional, and if sent, it will be ignored.\n\n- The 'ref' parameter is a UNIQUE string representing the order ID on your backend side, It is useful for avoiding duplicated requests and easily tracking the status when integrating with our top-up API.\n  While it is optional, we strongly recommend sending your own.\n\n\n\nPlease follow this approach for atomicity and efficiency:\n\n- Make sure to create a table/collection in your database to save user requests (include MSSIDN, plan_code, status, etc.).\n- In a database transaction, create the order, adjust the user's balance, and return the order ID to the user.\n- Send the response to the user indicating that the order is processing and they will be notified once it's done.\n- Asynchronously, send the API request and include the order ID from your database as 'ref' to easily look it up.\n\nIf the API request fails immediately due to one of the following errors or a network error,\nyou can safely either refund your user or try again with the same 'ref'.\n\nWe strongly advise against sending the API request without saving the order first.\n\n\n# Response => 200\na successfull respond will return the topupId and the topupRef \n( if not set by you , you should save it on your orders table )\n\nchecking the status / callback please refer to topup/getStatus documentations\n\n        {\n          \"topupId\": \"string\",\n          \"topupRef\": \"string\",\n          \"newBalance\": \"number\"\n        }\n\n`newBalance` is not always present , like when you send get_menu plan\n\n# Response => 403 ( \"error\": \"Forbidden\" )\n\"message\" is one of the following and and it's meant for your you as developer\n\n       \"NO-BALANCE\" => you don't have enough balance to perform this request\n       \"DUPLICATED-REF\" => this ref is already used , you should check the current order status topup/getByRef/:ref\n\n# Response => 400 Bad Request\n\n## Request Valiadtion  / Service Errors ( \"error\": \"ERR_VALIDATION\" ):\n\nmessage can be shown as it is to your client as long as you are sending the correct plan_code and request params\n\n\"message\" is one of the following \n\n      \"body must be object\" =>  send a post request with a valid JSON body , add Content-Type: application/json\n\n### plan_code\n\n      \"body must have required property 'plan_code'\" => make sure to include the plan_code\n      \"body/plan_code must be valid\" => you possibly need to resync the plans to send the correct plan plan_code\n\n### MSSIDN (phone)\n\n      \"body must have required property 'MSSIDN'\" => make sure to include the MSSIDN\n      \"body/MSSIDN must match pattern \"^0[567][0-9]{8}$\" => make the MSSIDN/Phone number is in correct form\n      \"body/MSSIDN mismatch with plan\" => Example: sending \"M-PIXX-500\" a mobilis plan to \"0778037340\" djezzy number\n      \"Unexpected number in JSON\" => you possibly sent the \"MSSIDN\" as a number: 0778037340 instead of string \n\n### amount\n\n      \"body/amount must be integer\" => the Mobile topup amount must be a positive integer, Bad examples ( 50.5 , -50 ..)\n      \"body/amount must is required on dynamicPlans\" => when plan is dynamic the amount is no longer optional\n      \"body/amount must be between MIN and MAX\" => sending low or big amount that are not allowed like 30 in mobilis...\n\n\n# Response => 500 Internal Server Error\nAn internal server error occurred. ( don't refund till we investigate the request )\n      ",
+                "tags": [
+                    "mobile-topup"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "MSSIDN": {
+                                        "type": "string",
+                                        "pattern": "^0[567][0-9]{8}$"
+                                    },
+                                    "plan_code": {
+                                        "type": "string"
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    },
+                                    "ref": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "plan_code",
+                                    "MSSIDN"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Success",
+                                    "properties": {
+                                        "topupId": {
+                                            "type": "string"
+                                        },
+                                        "topupRef": {
+                                            "type": "string"
+                                        },
+                                        "newBalance": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Forbidden",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Forbidden"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "NO-BALANCE",
+                                                "DUPLICATED-REF"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/topup/checkStatus/{by}/{search}": {
+            "get": {
+                "summary": "check-status",
+                "description": "Generally our servers will process your request in about 5-30 seconds\n\nit's mandatory to understand all the possible status to understand how to handle updating and notifying your users  \n\n        \n# Status\n### PENDING\n\nThe `PENDING` status indicates that the order has been created and is currently in the queue, awaiting processing by one of our servers. It will be processed as soon as possible, typically within 2 to 15 seconds.\n\n### HANDLING\n\nThe `HANDLING` status indicates that the order is currently being processed by one of our servers. You can expect to receive the result within 3 to 8 seconds.\n\n### FULFILLED\n\nThe `FULFILLED` status indicates that the mobile top-up has been successfully sent.\n\n### REFUNDED\n\nThe `REFUNDED` status indicates that the mobile top-up has been refunded.\n\n### UNKNOWN_ERROR:\n\nThe `UNKNOWN_ERROR` status indicates that the mobile top-up might was successful or failed. \nthe status and will update in 1 to 12 hours to either FULFILLED or REFUNDED after manual check by our support team, \nwe will be notified immediatly and no action from your part is required.\n\nsuch errors happen Due to the nature of AT Commands and the unexpected behaviors  from operators (new messages , network ..)\n\nYOU SHOULD NOT REFUND THE AMOUNT to your user at this status , instead show the refund_message to your client\n\nSet a daily cronjob that check the UNKNOWN_ERROR and update to FULFILLED or REFUNDED and then handle refunds\n\n\n# Handling Refunds\n\nA `refund_message` ( Arabic Message ) will be added to the topup operation and you should show it as it is to your client\n\nExample if your client type a wrong phone number => `\"رقم الهاتف خاطئ، يرجى التأكد مع العميل\"`\n\nA `suggested_offers` Array will be added as well \n\nit's show the correct plans for the phone number\nUpdate your app UI to represent the new plans instead of all plans\n\nExample if your client trying to send  PREPAID_DJEZZY to a facture phone number ,\n\n`refund_message` => `\"هذا العرض غير متوافق مع هذا الرقم جرب فاتورة\"`,\n\n`suggested_offers =`\n`[{\n   typename: \"📋 FACTURE | فاتورة\",\n   plan_code: \"FACTURE_DJEZZY\",\n   amount: 500\n}]`\n\n\nPLEASE NOTE SUGGESTED_OFFERS IS AN ARRAY AND IT CAN CONTAIN MULTIPLE ITEMS FOR EXAMPLE WHEN YOU SEND GETMENU\n\n# Syncing our API with your backend\n\n## on Each get request from your users\n\nset a checkStatus endpoint on your backend \n\nOne simple approach is setting an interval of 5 -10 seconds on your frontEnd to check the status once the status is FULFILLED or Refunded or UNKNOWN you clear the interval and stop sending request\n\non each get request from your users , you can read the status in your database ,\nonly if the status is not `FULFILLED` or `Refunded` or `UNKNOWN`, you send a check request to our api and update your database then reply to your user\n\nthis approach will keep a minimal request (5-10 per transaction)\n\n# SANDBOX\nenable the sandbox at your settings page in oneclickdz then you can test your requests without affecting your balance\n\nall operations will emulate a real operaton\nfirst 5 seconds status PENDING\nfirst 15 seconds status HANDLING\nthen status FULFILLED\n\nafter intergrating the fullfilled part \n\nintegrate and handle other status\n\n## 0600000001\nTest refunded status with refund_message that should be shown to client\n\n##  0600000002\nTest refunded status with refund_message and suggested_offers\n\n## 0600000003\nTest UNKNOWN_ERROR\n        \n        ",
+                "tags": [
+                    "mobile-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "by",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "REF",
+                                "ID"
+                            ]
+                        }
+                    },
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "topup": {
+                                            "$id": "TopupModel",
+                                            "type": "object",
+                                            "title": "topup",
+                                            "properties": {
+                                                "ref": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "PENDING",
+                                                        "HANDLING",
+                                                        "UNKNOWN_ERROR",
+                                                        "FULFILLED",
+                                                        "REFUNDED"
+                                                    ]
+                                                },
+                                                "plan_code": {
+                                                    "type": "string"
+                                                },
+                                                "bulk": {
+                                                    "type": "boolean"
+                                                },
+                                                "MSSIDN": {
+                                                    "type": "string"
+                                                },
+                                                "topup_amount": {
+                                                    "type": "number"
+                                                },
+                                                "balance_amount": {
+                                                    "type": "number"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "_id": {
+                                                    "type": "string"
+                                                },
+                                                "refund_message": {
+                                                    "type": "string"
+                                                },
+                                                "suggested_offers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "typename": {
+                                                                "type": "string"
+                                                            },
+                                                            "plan_code": {
+                                                                "type": "string"
+                                                            },
+                                                            "amount": {
+                                                                "type": "number"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Request validation",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ERR_VALIDATION"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "params/by must be equal to one of the allowed values"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "not found ",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "enum": [
+                                                "NOT_FOUND"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/topup/list": {
+            "get": {
+                "summary": "listMobiletopups",
+                "description": "# Topups\n\n\n# Please refer to \"check-status\" /checkStatus/:by/:search docs to understand the model\n\nthis API supports pagination and allows you to filter by date (optional). \n\n- Page: The page number for pagination (default: 1, minimum: 1).\n- PageSize: The number of transactions per page (default: 20, maximum: 100, minimum: 1).\n- From: The start date and time for filtering transactions (ISO 8601 date-time format).\n- To: The end date and time for filtering transactions (ISO 8601 date-time format).\n\nThe response will topup orders.\n\n## Imporant\n\nPlease note that page numbering starts from 1, not 0.\nMax PageSize is 100.\nWhen filtering by date, the 'from' and 'to' parameters in the query should be both presented and in ISO 8601 date-time format.\n\n## errorMessages\n    \"querystring.page must be an integer\"\n    \"querystring.page should be >= 1\"\n    \"querystring.pageSize must be an integer\"\n    \"querystring.pageSize should be >= 1\"\n    \"querystring.pageSize should be <= 100\"\n    \"querystring.from should match the format 'date-time'\"\n    \"querystring.to should match the format 'date-time'\"\n        ",
+                "tags": [
+                    "mobile-topup"
+                ],
+                "parameters": [
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "pageSize",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 20
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "required": false,
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "access_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Successful response",
+                                    "type": "object",
+                                    "properties": {
+                                        "topups": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/def-5"
+                                            }
+                                        },
+                                        "totalResults": {
+                                            "type": "integer"
+                                        },
+                                        "currentPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error Validating Query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Error Validating Query",
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "querystring.page must be an integer",
+                                                "querystring.page should be >= 1",
+                                                "querystring.pageSize must be an integer",
+                                                "querystring.pageSize should be >= 1",
+                                                "querystring.pageSize should be <= 100",
+                                                "querystring.from should match the format 'date-time'",
+                                                "querystring.to should match the format 'date-time'"
+                                            ]
+                                        },
+                                        "requestId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/def-0"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
+    "tags": [
+        {
+            "name": "authentication",
+            "description": "Operations related to authentication"
+        },
+        {
+            "name": "info",
+            "description": "Operations related to service status"
+        },
+        {
+            "name": "account",
+            "description": "Operations related to user account"
+        },
+        {
+            "name": "plans",
+            "description": "Operations related to mobile top-ups plans"
+        },
+        {
+            "name": "mobile-topup",
+            "description": "Operations related to mobile top-ups"
+        },
+        {
+            "name": "internet-topup",
+            "description": "Operations related to ADSL | 4G top-ups"
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://flexy-api.oneclickdz.com"
+        },
+        {
+            "url": "http://flexy-api.oneclickdz.com"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "access_token": {
+                "type": "apiKey",
+                "name": "authorization",
+                "in": "header"
             }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+        },
+        "schemas": {
+            "UnauthorizedError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "requestId": {
+                        "type": "string"
+                    },
+                    "attemptsLeft": {
+                        "type": "integer"
+                    }
                 }
-              }
+            },
+            "ForbiddenError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "requestId": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "def-0": {
+                "description": "Internal Server Error",
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "enum": [
+                            "Internal Server Error"
+                        ]
+                    },
+                    "message": {
+                        "type": "string",
+                        "enum": [
+                            "Developer was Notified and will check shortly"
+                        ]
+                    },
+                    "requestId": {
+                        "type": "string"
+                    }
+                },
+                "title": "InternalServerError"
+            },
+            "def-1": {
+                "type": "object",
+                "title": "transaction",
+                "required": [
+                    "type",
+                    "operation",
+                    "oldBalance",
+                    "amount",
+                    "newBalance"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "DEPOSIT",
+                            "WITHDRAW",
+                            "SEND",
+                            "RECEIVE",
+                            "POINT-EXCHANGE",
+                            "ORDER",
+                            "REFUND-ORDER",
+                            "FLEXY",
+                            "REFUND-FLEXY",
+                            "ADSL",
+                            "REFUND-ADSL",
+                            "SERVICE",
+                            "REFUND-SERVICE"
+                        ]
+                    },
+                    "operation": {
+                        "type": "string",
+                        "enum": [
+                            "increment",
+                            "decrement"
+                        ]
+                    },
+                    "oldBalance": {
+                        "type": "number"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "newBalance": {
+                        "type": "number"
+                    },
+                    "objid": {
+                        "type": "string"
+                    },
+                    "note": {
+                        "type": "string"
+                    },
+                    "time": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "_id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "def-2": {
+                "type": "object",
+                "title": "dynamicPlan",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "operator": {
+                        "type": "string",
+                        "enum": [
+                            null
+                        ]
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "isEnabled": {
+                        "type": "boolean"
+                    },
+                    "min_amount": {
+                        "type": "number"
+                    },
+                    "max_amount": {
+                        "type": "number"
+                    }
+                }
+            },
+            "def-3": {
+                "type": "object",
+                "title": "fixedPlan",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "operator": {
+                        "type": "string",
+                        "enum": [
+                            null
+                        ]
+                    },
+                    "isEnabled": {
+                        "type": "boolean"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                }
+            },
+            "def-4": {
+                "type": "object",
+                "title": "internet",
+                "properties": {
+                    "ref": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "HANDLING",
+                            "FULFILLED",
+                            "REFUNDED",
+                            "QUEUED"
+                        ]
+                    },
+                    "card_code": {
+                        "type": "string"
+                    },
+                    "num_trans": {
+                        "type": "string"
+                    },
+                    "date_traitement": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "topup_amount": {
+                        "type": "number"
+                    },
+                    "number": {
+                        "type": "string"
+                    },
+                    "balance_amount": {
+                        "type": "number"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "_id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "def-5": {
+                "type": "object",
+                "title": "topup",
+                "properties": {
+                    "ref": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "HANDLING",
+                            "UNKNOWN_ERROR",
+                            "FULFILLED",
+                            "REFUNDED"
+                        ]
+                    },
+                    "plan_code": {
+                        "type": "string"
+                    },
+                    "MSSIDN": {
+                        "type": "string"
+                    },
+                    "topup_amount": {
+                        "type": "number"
+                    },
+                    "balance_amount": {
+                        "type": "number"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "_id": {
+                        "type": "string"
+                    },
+                    "refund_message": {
+                        "type": "string"
+                    },
+                    "suggested_offers": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "typename": {
+                                    "type": "string"
+                                },
+                                "plan_code": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    },
+                    "follow_orderid": {
+                        "type": "string"
+                    },
+                    "retry_orderid": {
+                        "type": "string"
+                    }
+                }
             }
-          }
         }
-      }
     }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
-  }
 }
