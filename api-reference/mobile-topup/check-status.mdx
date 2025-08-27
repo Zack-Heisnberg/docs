@@ -1,0 +1,28 @@
+---
+title: 'GET /v2/topup/checkStatus/{by}/{search}'
+description: 'Check mobile top-up status'
+---
+
+Track a mobile top-up by reference or ID.
+
+**Path parameters**
+- `by`: `REF` or `ID`
+- `search`: value for the chosen type
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/topup/checkStatus/REF/my-order
+```
+
+```json
+{
+  "topup": {
+    "ref": "my-order",
+    "status": "PENDING",
+    "plan_code": "PREPAID_DJEZZY",
+    "topup_amount": 100
+  }
+}
+```
+
+Possible statuses: `PENDING`, `HANDLING`, `UNKNOWN_ERROR`, `FULFILLED`, `REFUNDED`.

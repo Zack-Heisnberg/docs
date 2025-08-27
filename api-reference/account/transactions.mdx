@@ -1,0 +1,32 @@
+---
+title: 'GET /v2/account/transactions'
+description: 'List transactions'
+---
+
+List balance changes with optional pagination and date filters.
+
+**Query parameters**
+- `page` and `pageSize` control pagination.
+- `from` and `to` filter by ISO 8601 date range.
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  'https://flexy-api.oneclickdz.com/v2/account/transactions?page=1&pageSize=20'
+```
+
+```json
+{
+  "transactions": [
+    {
+      "type": "DEPOSIT",
+      "operation": "increment",
+      "oldBalance": 0,
+      "amount": 500,
+      "newBalance": 500
+    }
+  ],
+  "totalResults": 1,
+  "currentPage": 1,
+  "totalPages": 1
+}
+```

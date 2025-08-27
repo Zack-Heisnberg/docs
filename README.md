@@ -1,32 +1,11 @@
-# Mintlify Starter Kit
+# OneClickDz Flexy API Docs
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
+This repository contains the public documentation for the OneClickDz Flexy API, a RESTful service for mobile and internet top-ups in Algeria.
 
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
+The site is built with [Mintlify](https://mintlify.com) and uses an OpenAPI specification to describe available endpoints.
 
-### Development
+## Getting started
+- Read the [Introduction](./introduction.mdx) for an overview.
+- Follow the [Quickstart](./quickstart.mdx) to obtain an API key and send requests.
+- Explore the [API Reference](./api-reference/openapi.json) for endpoint details.
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
-
-```
-npm i -g mintlify
-```
-
-Run the following command at the root of your documentation (where docs.json is)
-
-```
-mintlify dev
-```
-
-### Publishing Changes
-
-Install our Github App to auto propagate changes from your repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch. Find the link to install on your dashboard. 
-
-#### Troubleshooting
-
-- Mintlify dev isn't running - Run `mintlify install` it'll re-install dependencies.
-- Page loads as a 404 - Make sure you are running in a folder with `docs.json`

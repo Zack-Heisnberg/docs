@@ -1,0 +1,20 @@
+---
+title: Authentication
+description: Secure requests with access tokens
+---
+
+All API calls require an `authorization` header that contains your access token.
+
+## Sending the header
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/validate
+```
+
+Replace `YOUR_TOKEN` with the key from your dashboard. If the header is missing or incorrect, the API responds with:
+
+- `400` – access token missing
+- `401` – invalid access token
+- `403` – too many invalid attempts, IP blocked
+
+Always keep your token secret and rotate it if you suspect compromise.

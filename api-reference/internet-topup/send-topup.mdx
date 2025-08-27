@@ -1,0 +1,30 @@
+---
+title: 'POST /v2/internet/sendTopup'
+description: 'Send internet top-up'
+---
+
+Create an internet top-up for ADSL or 4G using a card value and validated number.
+
+**Request body**
+- `type`: `ADSL` or `4G`
+- `number`: phone number validated earlier
+- `value`: card value
+- `ref`: optional unique order ID
+
+```bash
+curl -X POST \
+  -H "authorization: YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"ADSL","number":"036362608","value":500,"ref":"my-order"}' \
+  https://flexy-api.oneclickdz.com/v2/internet/sendTopup
+```
+
+```json
+{
+  "topupId": "...",
+  "topupRef": "my-order",
+  "newBalance": 1960
+}
+```
+
+Errors may include `ERR_SERVICE`, `ERR_VALIDATION`, `ERR_PHONE`, `ERR_STOCK`, `NO-BALANCE`, or `DUPLICATED-REF`.

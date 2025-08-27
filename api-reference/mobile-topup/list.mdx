@@ -1,0 +1,30 @@
+---
+title: 'GET /v2/topup/list'
+description: 'List mobile top-ups'
+---
+
+List mobile top-up orders with pagination and optional date filters.
+
+**Query parameters**
+- `page` and `pageSize`
+- `from` and `to` (ISO 8601 date range)
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  'https://flexy-api.oneclickdz.com/v2/topup/list?page=1&pageSize=20'
+```
+
+```json
+{
+  "topups": [
+    {
+      "ref": "my-order",
+      "status": "FULFILLED",
+      "topup_amount": 100
+    }
+  ],
+  "totalResults": 1,
+  "currentPage": 1,
+  "totalPages": 1
+}
+```

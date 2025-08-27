@@ -1,0 +1,35 @@
+---
+title: 'GET /v2/plans/listAll'
+description: 'List plans'
+---
+
+Return available dynamic and fixed plans.
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/plans/listAll
+```
+
+```json
+{
+  "dymanicPlans": [
+    {
+      "code": "PREPAID_DJEZZY",
+      "name": "Prepaid Djezzy",
+      "min_amount": 50,
+      "max_amount": 2000,
+      "cost": 0.98
+    }
+  ],
+  "fixedPlans": [
+    {
+      "code": "M-PIXX-500",
+      "name": "Pixx 500",
+      "amount": 500,
+      "cost": 0.98
+    }
+  ]
+}
+```
+
+Hide the `cost` field when displaying plans to end users.

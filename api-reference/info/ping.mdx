@@ -1,0 +1,22 @@
+---
+title: 'GET /v2/ping'
+description: 'Ping endpoint'
+---
+
+Checks the status of the API service and operator availability.
+
+```bash
+curl https://flexy-api.oneclickdz.com/v2/ping
+```
+
+```json
+{
+  "api": "ok",
+  "operators": {
+    "mobilis": "up",
+    "ooredoo": "up",
+    "djezzy": "up",
+    "mobilisFixedPlans": "up"
+  }
+}
+```

@@ -1,0 +1,27 @@
+---
+title: 'GET /v2/internet/checkNumber/{type}/{number}'
+description: 'Validate internet service number'
+---
+
+Validate a phone number for ADSL or 4G before sending a top-up.
+
+**Path parameters**
+- `type`: `ADSL` or `4G`
+- `number`: `213XXXXXXXXX` or `0XXXXXXXX`
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/internet/checkNumber/ADSL/036362608
+```
+
+```json
+{
+  "ncli": "110201****",
+  "offre": "15M_ADSL_Prepaid_indiviual",
+  "type": "ADSL"
+}
+```
+
+Errors:
+- `ERR_VALIDATION` – missing or malformed params
+- `ERR_PHONE` – invalid number or operator issue

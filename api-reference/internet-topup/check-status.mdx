@@ -1,0 +1,28 @@
+---
+title: 'GET /v2/internet/checkStatus/{by}/{search}'
+description: 'Check internet top-up status'
+---
+
+Track an internet top-up by reference or ID.
+
+**Path parameters**
+- `by`: `REF` or `ID`
+- `search`: value for the chosen type
+
+```bash
+curl -H "authorization: YOUR_TOKEN" \
+  https://flexy-api.oneclickdz.com/v2/internet/checkStatus/REF/my-order
+```
+
+```json
+{
+  "topup": {
+    "ref": "my-order",
+    "status": "FULFILLED",
+    "card_code": "6964...",
+    "topup_amount": 2000
+  }
+}
+```
+
+Possible statuses: `HANDLING`, `FULFILLED`, `REFUNDED`, `QUEUED`.

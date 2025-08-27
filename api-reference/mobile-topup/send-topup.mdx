@@ -1,0 +1,30 @@
+---
+title: 'POST /v2/topup/sendTopup'
+description: 'Send mobile top-up'
+---
+
+Create a mobile top-up using a plan code and phone number.
+
+**Request body**
+- `plan_code`: value from `/v2/plans/listAll`
+- `MSSIDN`: phone number matching `^0[567][0-9]{8}$`
+- `amount`: required for dynamic plans
+- `ref`: optional unique order ID
+
+```bash
+curl -X POST \
+  -H "authorization: YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"plan_code":"PREPAID_DJEZZY","MSSIDN":"0778037340","amount":100,"ref":"my-order"}' \
+  https://flexy-api.oneclickdz.com/v2/topup/sendTopup
+```
+
+```json
+{
+  "topupId": "...",
+  "topupRef": "my-order",
+  "newBalance": 980
+}
+```
+
+Errors may include `ERR_VALIDATION`, `NO-BALANCE`, or `DUPLICATED-REF`.
